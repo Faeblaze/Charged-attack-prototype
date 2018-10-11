@@ -19,6 +19,9 @@ public class PlayerSword : MonoBehaviour {
         hitCooldown = Mathf.Max(0, hitCooldown - Time.deltaTime);
     }
 
+
+    //ENENY takes dmg... colider
+
     void OnTriggerEnter (Collider other)
     {
         if (!player.animator.GetCurrentAnimatorStateInfo(0).IsName("swing") && !player.animator.GetCurrentAnimatorStateInfo(0).IsName("1HAttack") && !player.animator.GetCurrentAnimatorStateInfo(0).IsName("2HAttack") || hitCooldown > 0F)

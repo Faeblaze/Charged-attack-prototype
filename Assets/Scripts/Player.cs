@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
         {
             trail.Emit = false;
         }
-
+        //TRAIL COLOUR code
         trail._colors[0] = c;
 
         animator.SetBool("AttackHold", Input.GetMouseButton(0));
@@ -118,8 +118,9 @@ public class Player : MonoBehaviour
             UIManager.instance.requiresCursor = true;
             Time.timeScale = 0;
         }
-        // SceneManager.LoadScene("Wk10");
+        // SceneManager.LoadScene("Wk10");      
         if (Input.GetMouseButtonDown(0)) { ComboStarter(); }
+        //flat dmg button 1
         if (Input.GetKeyDown(KeyCode.Alpha1) && supercd)
         {
             SuperAttack();
@@ -137,7 +138,7 @@ public class Player : MonoBehaviour
         }
 
         UIManager.instance.super.fillAmount = cooldown / 10;
-
+        //move fast blink button 2
         if (Input.GetKeyDown(KeyCode.Alpha2) && dash)
         {
             Evade();
@@ -155,7 +156,7 @@ public class Player : MonoBehaviour
         }
 
         UIManager.instance.dash.fillAmount = dashcd / 10;
-
+        //shield button 3
         if (Input.GetKeyDown(KeyCode.Alpha3) && reflect)
         {
             DestructiveBarrier();
@@ -195,7 +196,7 @@ public class Player : MonoBehaviour
             animator.SetTrigger("Attack");
         }
     }
-
+    //combo code
     public void ComboCheck()
     {
 
@@ -231,18 +232,18 @@ public class Player : MonoBehaviour
 
 
     }
-
+    //alpha 1
     void SuperAttack()
     {
         superActor.Activate();
     }
-
+    //alpha2
     void Evade()
     {
         if (Physics.Raycast(transform.position, transform.forward, blinkDistance, 1 << 2))
             transform.Translate(Vector3.forward * blinkDistance);
     }
-
+    //alpha3
     void DestructiveBarrier()
     {
         barrierActor.Activate();
@@ -257,7 +258,7 @@ public class Player : MonoBehaviour
         if (health < 0F)
             health = 0F;
     }
-
+//EXP
     public void GrantXP(int xp)
     {
         this.xp += xp;
