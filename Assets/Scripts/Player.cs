@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public int baseHealth = 100;
     public int baseDamage = 10;
 
+
     public int MaxHealth
     {
         get
@@ -91,7 +92,7 @@ public class Player : MonoBehaviour
         else if (animator.GetCurrentAnimatorStateInfo(0).IsName("2HAttack"))
         {
             c = Color.red;
-            c.a = Mathf.Clamp01(.3F + 1F * (holdTime / holdTimeMax));
+            c.a = Mathf.Clamp01(.3F + 1f * (holdTime / holdTimeMax));
             baseDamage = 40 * Mathf.Max(1, Mathf.CeilToInt(holdTime));
         }
         else
@@ -199,7 +200,6 @@ public class Player : MonoBehaviour
     //combo code
     public void ComboCheck()
     {
-
         canClick = false;
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("swing") && noOfClicks == 1)

@@ -6,12 +6,14 @@ public class PlayerSword : MonoBehaviour {
 
     private Player player;
     private float hitCooldown;
+    private hitplayer hitplayer;
 
     // Use this for initialization
     void Start ()
     {
-        player = (Player)Object.FindObjectOfType(typeof(Player));
-	}
+        player = GetComponentInParent<Player>();
+        hitplayer = player.GetComponent<hitplayer>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -33,10 +35,11 @@ public class PlayerSword : MonoBehaviour {
 
             hitCooldown = .5F;
 
-            Debug.Log("Herpty derp I have collided");
-
+            hitplayer.HitNow(player.Damage, enemy.transform);
             enemy.TakeDamage(player.Damage);
             //enemy.Health -= Player Damage
         }
+
+
     }
 }

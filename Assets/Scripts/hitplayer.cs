@@ -8,7 +8,7 @@ public class hitplayer : MonoBehaviour
     private GameObject playerObject;
 
     [SerializeField]
-    private GameObject hitMarkerPrefab;
+    public GameObject hitMarkerPrefab;
 
     [SerializeField]
     private Color[] markerCoulurs;
@@ -16,20 +16,17 @@ public class hitplayer : MonoBehaviour
     [SerializeField]
     private float markerKillTime;
 
-    private void Update()
+    private Player player;
+
+    private void Awake()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            HitNow();
-        }
+        player = playerObject.GetComponent<Player>();
     }
 
-    public void HitNow()
+    public void HitNow(int damage, Transform parent)
     {
-        GameObject newMarker = Instantiate(hitMarkerPrefab, playerObject.transform.position, Quaternion.identity);
-        newMarker.SetActive(true);
-        newMarker.GetComponent<DamageMarkerController>().SetTextAndMove(Random.Range(0, 101).ToString(),
-        markerCoulurs[Random.Range(0, markerCoulurs.Length)]);
+        GameObject newMarker = Instantiate(hitMarkerPrefab, parent, false);
+        newMarker.GetComponent<DamageMarkerController>().SetTextAndMove(damage.ToString(), markerCoulurs[Random.Range(0, markerCoulurs.Length)]).SetPlayer(player);
         Destroy(newMarker.gameObject, markerKillTime);
     }
 }
