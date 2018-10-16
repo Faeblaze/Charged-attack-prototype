@@ -11,6 +11,10 @@ public class Player : MonoBehaviour
     public int baseHealth = 100;
     public int baseDamage = 10;
 
+    public Gradient colorShiftTier1;
+    public Gradient colorShiftTier2;
+
+    public ParticleSystem swordParticles;
 
     public int MaxHealth
     {
@@ -51,7 +55,8 @@ public class Player : MonoBehaviour
     bool canClick; //Locks ability to click during animation event
 
     private float holdTime = 0F;
-    public float holdTimeMax = 5F;
+    public float holdTimeTier1 = 5F;
+    public float holdTimeTier2 = 10F;
 
     void Start()
     {
@@ -78,22 +83,32 @@ public class Player : MonoBehaviour
         trail.Emit = true;
         Color c = trail._colors[0];
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("swing") || animator.GetCurrentAnimatorStateInfo(0).IsName("1HAttack"))
+        if (animator.GetCurrentAnimatorStateInfo(1).IsName("swing") || animator.GetCurrentAnimatorStateInfo(1).IsName("1HAttack"))
         {
             c = Color.blue;
             c.a = .2F;
             baseDamage = 10;
         }
-        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("2HAttackCharge"))
+        else if (animator.GetCurrentAnimatorStateInfo(1).IsName("2HAttackCharge"))
         {
-            c = Color.red;
-            c.a = .3F;
+            if (!swordParticles.isPlaying)
+                swordParticles.Play();
+
+            swordParticles.startColor = c;
+
+            if (holdTime <= holdTimeTier1)
+                c = colorShiftTier1.Evaluate(holdTime / holdTimeTier1);
+            else
+                c = colorShiftTier2.Evaluate((holdTime - holdTimeTier1) / (holdTimeTier2 - holdTimeTier1));
         }
-        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("2HAttack"))
+        else if (animator.GetCurrentAnimatorStateInfo(1).IsName("2HAttack"))
         {
-            c = Color.red;
-            c.a = Mathf.Clamp01(.3F + 1f * (holdTime / holdTimeMax));
-            baseDamage = 40 * Mathf.Max(1, Mathf.CeilToInt(holdTime));
+            if (swordParticles.isPlaying)
+                swordParticles.Stop();
+
+            baseDamage = Mathf.RoundToInt(40 * Mathf.Clamp(holdTime, 1, holdTimeTier1));
+            if (holdTime > holdTimeTier1)
+                baseDamage += Mathf.RoundToInt(100 * Mathf.Clamp(holdTime - holdTimeTier1, 0F, holdTimeTier2 - holdTimeTier1));
         }
         else
         {
@@ -104,11 +119,12 @@ public class Player : MonoBehaviour
 
         animator.SetBool("AttackHold", Input.GetMouseButton(0));
 
-        if (animator.GetBool("AttackHold") && animator.GetCurrentAnimatorStateInfo(0).IsName("2HAttackCharge"))
+        if (animator.GetBool("AttackHold") && animator.GetCurrentAnimatorStateInfo(1).IsName("2HAttackCharge"))
         {
-            holdTime = Mathf.Clamp(Time.deltaTime + holdTime, 0F, holdTimeMax);
+            holdTime = Mathf.Clamp(Time.deltaTime + holdTime, 0F, holdTimeTier2);
+            Debug.Log(holdTime);
         }
-        else if(animator.GetCurrentAnimatorStateInfo(0).IsName("swing"))
+        else if(animator.GetCurrentAnimatorStateInfo(1).IsName("swing"))
         {
             holdTime = 0F;
         }
@@ -202,29 +218,29 @@ public class Player : MonoBehaviour
     {
         canClick = false;
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("swing") && noOfClicks == 1)
+        if (animator.GetCurrentAnimatorStateInfo(1).IsName("swing") && noOfClicks == 1)
         {//If the first animation is still playing and only 1 click has happened, return to idle
             animator.SetTrigger("Attack");
             canClick = true;
             noOfClicks = 0;
         }
-        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("swing") && noOfClicks >= 2)
+        else if (animator.GetCurrentAnimatorStateInfo(1).IsName("swing") && noOfClicks >= 2)
         {//If the first animation is still playing and at least 2 clicks have happened, continue the combo          
             animator.SetTrigger("Attack");
             canClick = true;
         }
-        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("1HAttack") && noOfClicks == 2)
+        else if (animator.GetCurrentAnimatorStateInfo(1).IsName("1HAttack") && noOfClicks == 2)
         {  //If the second animation is still playing and only 2 clicks have happened, return to idle         
             animator.SetTrigger("Attack");
             canClick = true;
             noOfClicks = 0;
         }
-        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("1HAttack") && noOfClicks >= 3)
+        else if (animator.GetCurrentAnimatorStateInfo(1).IsName("1HAttack") && noOfClicks >= 3)
         {  //If the second animation is still playing and at least 3 clicks have happened, continue the combo         
             animator.SetTrigger("Attack");
             canClick = true;
         }
-        else //if (animator.GetCurrentAnimatorStateInfo(0).IsName("2HAttack"))
+        else //if (animator.GetCurrentAnimatorStateInfo(1).IsName("2HAttack"))
         { //Since this is the third and last animation, return to idle          
             canClick = false;
             noOfClicks = 0;

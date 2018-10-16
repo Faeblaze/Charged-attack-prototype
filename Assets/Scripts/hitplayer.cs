@@ -25,7 +25,10 @@ public class hitplayer : MonoBehaviour
 
     public void HitNow(int damage, Transform parent)
     {
-        GameObject newMarker = Instantiate(hitMarkerPrefab, parent, false);
+        GameObject attachConstraint = new GameObject("Attach Constraint Object");
+        attachConstraint.AddComponent<Attach>().SetFallbackPosition(parent.position).target = parent;
+
+        GameObject newMarker = Instantiate(hitMarkerPrefab, attachConstraint.transform, false);
         newMarker.GetComponent<DamageMarkerController>().SetTextAndMove(damage.ToString(), markerCoulurs[Random.Range(0, markerCoulurs.Length)]).SetPlayer(player);
         Destroy(newMarker.gameObject, markerKillTime);
     }

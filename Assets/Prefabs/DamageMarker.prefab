@@ -198,7 +198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveAmt: 5
-  movespeed: 1
+  movespeed: 0.5
 --- !u!222 &222564877526722172
 CanvasRenderer:
   m_ObjectHideFlags: 1

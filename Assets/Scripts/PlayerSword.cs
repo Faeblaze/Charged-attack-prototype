@@ -26,14 +26,14 @@ public class PlayerSword : MonoBehaviour {
 
     void OnTriggerEnter (Collider other)
     {
-        if (!player.animator.GetCurrentAnimatorStateInfo(0).IsName("swing") && !player.animator.GetCurrentAnimatorStateInfo(0).IsName("1HAttack") && !player.animator.GetCurrentAnimatorStateInfo(0).IsName("2HAttack") || hitCooldown > 0F)
+        if (!player.animator.GetCurrentAnimatorStateInfo(1).IsName("swing") && !player.animator.GetCurrentAnimatorStateInfo(1).IsName("1HAttack") && !player.animator.GetCurrentAnimatorStateInfo(1).IsName("2HAttack") || hitCooldown > 0F)
             return;
 
         if (other.CompareTag("Enemy"))
         {
             Enemy_Class enemy = other.GetComponentInChildren<Enemy_Class>();
 
-            hitCooldown = .5F;
+            hitCooldown = .3F;
 
             hitplayer.HitNow(player.Damage, enemy.transform);
             enemy.TakeDamage(player.Damage);

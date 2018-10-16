@@ -40,7 +40,7 @@ public class DamageMarkerController : MonoBehaviour
     private void Update()
     {
         if (canMove) transform.position = Vector3.MoveTowards(transform.position, transform.position + myMoveDir, moveAmt * (movespeed * Time.deltaTime));
-        transform.LookAt(player.transform);
+        transform.LookAt(Camera.main.transform);
         transform.Rotate(Vector3.up * 180F);
     }
 
