@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     {
         get
         {
-            return baseDamage + baseDamage / 100 * 200 * level;
+            return Mathf.RoundToInt(baseDamage + baseDamage / 100F * 200F * level);
         }
     }
 
