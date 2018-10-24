@@ -38,6 +38,8 @@ public class PlayerSword : MonoBehaviour {
             hitplayer.HitNow(player.Damage, enemy.transform);
             enemy.TakeDamage(player.Damage);
             //enemy.Health -= Player Damage
+
+            player.OnDealtDamage();
         }
 
 

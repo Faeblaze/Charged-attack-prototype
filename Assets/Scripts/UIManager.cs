@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class UIManager : MonoBehaviour {
 
@@ -16,6 +17,8 @@ public class UIManager : MonoBehaviour {
     public RectTransform healthBar;
     public RectTransform xpBarBackground;
     public RectTransform xpBar;
+
+    public GameObject comboCounterBox;
 
     public Text levelText;
 
@@ -31,6 +34,23 @@ public class UIManager : MonoBehaviour {
 
     public bool requiresCursor = false;
 
+    private TextMeshProUGUI comboCounterText;
+
+    public int ComboValue
+    {
+        get
+        {
+            int i = 0;
+            int.TryParse(comboCounterText.text, out i);
+            return i;
+        }
+        set
+        {
+            comboCounterBox.SetActive(value != 0);
+            comboCounterText.text = value.ToString();
+        }
+    }
+
 	void Awake () {
 
         instance = this;
@@ -39,6 +59,9 @@ public class UIManager : MonoBehaviour {
 
         healthText = healthBarBackground.GetComponentInChildren<Text>();
         xpText = xpBarBackground.GetComponentInChildren<Text>();
+
+        comboCounterText = comboCounterBox.GetComponentInChildren<TextMeshProUGUI>();
+        ComboValue = 0;
 
         LoseScreen.SetActive(false);
         WinScreen.SetActive(false);

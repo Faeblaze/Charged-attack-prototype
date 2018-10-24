@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour {
         }
 
         float horizontal = Input.GetAxis("Mouse X");
-        float vertical = Input.GetAxis("Mouse Y");
+        float vertical = -Input.GetAxis("Mouse Y");
 
         cam.transform.Rotate((Vector3.up * horizontal) * sensitivity.x);
         cam.transform.Translate((Vector3.up * vertical) * sensitivity.y * Time.deltaTime);

@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
 
     public ParticleSystem swordParticles;
 
+    public float comboCooloff = 5F;
+
     public int MaxHealth
     {
         get
@@ -28,7 +30,14 @@ public class Player : MonoBehaviour
     {
         get
         {
-            return Mathf.RoundToInt(baseDamage + baseDamage / 100F * 200F * level);
+            float dmg = baseDamage + baseDamage / 100F * 200F * level;
+
+            for(int i = 0; i < Mathf.FloorToInt(comboCount / 10F); i++)
+            {
+                dmg += dmg / 100F * 25F;
+            }
+
+            return Mathf.RoundToInt(dmg);
         }
     }
 
@@ -55,8 +64,12 @@ public class Player : MonoBehaviour
     bool canClick; //Locks ability to click during animation event
 
     private float holdTime = 0F;
+    [Header("Hold Tiers")]
     public float holdTimeTier1 = 5F;
     public float holdTimeTier2 = 10F;
+
+    private int comboCount = 0;
+    private float comboTime = 0F;
 
     void Start()
     {
@@ -192,6 +205,12 @@ public class Player : MonoBehaviour
 
         UIManager.instance.reflect.fillAmount = barriorcd / 20;
 
+        if(comboTime > 0F)
+            comboTime -= Time.deltaTime;
+
+        if (comboTime <= 0F)
+            comboCount = 0;
+        UIManager.instance.ComboValue = comboCount;
     }
 
     // RESTART GAME ON BUTTON CLICK IN THE GAME.
@@ -274,7 +293,7 @@ public class Player : MonoBehaviour
         if (health < 0F)
             health = 0F;
     }
-//EXP
+    #region EXP
     public void GrantXP(int xp)
     {
         this.xp += xp;
@@ -286,10 +305,18 @@ public class Player : MonoBehaviour
             health = 1F;
         }
     }
+    #endregion
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + transform.forward * blinkDistance);
+    }
+
+    internal void OnDealtDamage()
+    {
+        comboCount++;
+        comboCount = Mathf.Min(comboCount, 200);
+        comboTime = comboCooloff;
     }
 }
