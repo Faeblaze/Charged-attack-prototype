@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
 
     void LoadNewScene()
     {
-        SceneManager.LoadScene("SceneTwo");
+        SceneManager.LoadScene(1);
     }
 
     public void CycleDifficulty()
