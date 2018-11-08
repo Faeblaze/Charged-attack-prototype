@@ -15,9 +15,11 @@ public class PauseMenu : MonoBehaviour {
         {
             if (GameIsPaused)
             {
+                UIManager.instance.requiresCursor = false;
                 Resume();
             } else
             {
+                UIManager.instance.requiresCursor = true;
                 Pause();
             }
         }
